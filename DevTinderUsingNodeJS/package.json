@@ -1,0 +1,21 @@
+{
+  "name": "dev-tinder",
+  "version": "1.0.0",
+  "description": "A Node JS project to learn a Node js by Akshay Saini",
+  "repository": "https://github.com/santanujana12/DevTinderUsingNodeJS.git",
+  "author": "SJ",
+  "license": "MIT",
+  "scripts": {
+    "start": "nodemon src/app.js"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.13.2",
+    "validator": "^13.15.0"
+  },
+  "devDependencies": {},
+  "type": "module"
+}

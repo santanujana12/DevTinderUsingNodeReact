@@ -2,9 +2,9 @@ import { Link } from "react-router-dom";
 
 export const NavBar = () => {
   return (
-    <div className="navbar bg-base-100 shadow-sm">
+    <div className="navbar bg-base-300 shadow-sm">
       <div className="flex-1">
-        <Link className="btn btn-ghost text-xl">🧑🏻‍💻 DevTinder</Link>
+        <Link className="btn btn-ghost text-xl">Tinder💘 Clone</Link>
       </div>
       <div className="mx-4">
         <div className="dropdown dropdown-end">

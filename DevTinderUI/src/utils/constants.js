@@ -1,0 +1,1 @@
+export const IP_ADDRESS = "http://localhost:5000/api";

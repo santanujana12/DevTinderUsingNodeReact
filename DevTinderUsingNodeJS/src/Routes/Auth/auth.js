@@ -8,6 +8,11 @@ export const authRouter = express.Router();
 const Register = async (req, res) => {
   const { firstName, lastName, emailId, password, age, gender } = req.body;
 
+
+  if(!validator.isEmail(emailId)){
+    return res.status(400).send("Invalid Email Type");
+  }
+
   if (!validator.isStrongPassword(password)) {
     return res.status(400).send("Not a good password");
   }
@@ -48,6 +53,7 @@ const Login = async (req, res) => {
   }
   try {
     const user = await User.findOne({ emailId });
+    console.log(user);
     if (!user) {
       return res.status(400).send("User not found");
     } else {

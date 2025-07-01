@@ -23,7 +23,7 @@ const deleteProfile = async (req, res) => {
 const viewProfile = async (req, res) => {
   const { id } = req.User;
   try {
-    const user_from_db = await User.findById(id);
+    const user_from_db = await User.findById(id).select("firstName lastName gender emailId skills photoUrl");
     if (user_from_db) {
       res.send(user_from_db).status(200);
     } else {

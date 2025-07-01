@@ -37,6 +37,10 @@ const UserSchema = new mongoose.Schema({
     min: 18,
   },
   skills: [String],
+  photoUrl:{
+    type:String,
+    default:"https://pixabay.com/es/illustrations/icono-usuario-masculino-avatar-5359553/"
+  },
   timeStamp: {
     type: Date,
     default: Date.now,

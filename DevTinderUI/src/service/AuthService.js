@@ -27,3 +27,17 @@ export const LogoutService = async () => {
       return err;
     });
 };
+
+
+export const RegistrationService = async (userCreds) => {
+  return axios
+    .post(IP_ADDRESS + "/auth/register", userCreds, {
+      withCredentials: true,
+    })
+    .then((res) => {
+      return { message: res.data, status: res.status };
+    })
+    .catch((err) => {
+      return { message: err.response.data, status: err.response.status };
+    });
+};

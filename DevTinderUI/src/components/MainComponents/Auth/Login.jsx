@@ -21,7 +21,7 @@ export const Login = () => {
       toast.success(response.message);
       const profileResponse = await UserService();
       if (profileResponse) {
-        dispatch(addUser(response));
+        dispatch(addUser(profileResponse.message));
       } else {
         toast.error("Error fetching profile");
       }
@@ -37,12 +37,10 @@ export const Login = () => {
         <div className="card-body">
           <h2 className="card-title justify-center">Login</h2>
           <label className="form-control w-full max-w-xs my-2">
-            <div className="label">
-              <span className="label-text">Email ID:</span>
-            </div>
+            <span className="label label-text">Email ID:</span>
             <input
               type="text"
-              value={userCreds.email}
+              value={userCreds.emailId}
               className="input input-bordered w-full max-w-xs my-2"
               onChange={(e) =>
                 setUserCreds({ ...userCreds, emailId: e.target.value })
@@ -50,9 +48,7 @@ export const Login = () => {
             />
           </label>
           <label className="form-control w-full max-w-xs my-2">
-            <div className="label">
-              <span className="label-text">Password</span>
-            </div>
+            <span className="label label-text">Password</span>
             <input
               type="password"
               value={userCreds.password}
@@ -64,6 +60,9 @@ export const Login = () => {
           </label>
         </div>
         <div className="card-actions justify-end m-4">
+          <button className="btn btn-info" onClick={() => navigate("/sign-up")}>
+            Sign Up
+          </button>
           <button
             className="btn btn-primary"
             onClick={() => handleLogin(userCreds)}

@@ -12,17 +12,19 @@ export const Body = () => {
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
 
-
   const fetchUserDetails = useCallback(async () => {
-    const response = await UserService();
-    if (response.status === 200) {
-      dispatch(addUser(response));
-    } else {
+    try {
+      const response = await UserService();
+      if (response.status === 200) {
+        dispatch(addUser(response.message));
+      }
+    } catch {
+      toast.error("Session Expired! Please login again");
+      document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+      dispatch(removeUser());
       navigate("/login");
-      dispatch(removeUser())
-      toast.error(response.message);
     }
-  }, [dispatch,navigate]);
+  }, [dispatch, navigate]);
 
   useEffect(() => {
     if (document.cookie.includes("token") && !user) {

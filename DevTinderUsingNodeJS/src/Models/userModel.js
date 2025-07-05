@@ -33,13 +33,24 @@ const UserSchema = new mongoose.Schema({
   },
   gender: String,
   age: {
-    type: Number,
-    min: 18,
+    type: Date,
+    required: true,
+    validate(value) {
+      const today = new Date();
+      const birthDate = new Date(value);
+      const age = today.getFullYear() - birthDate.getFullYear();
+      const month = today.getMonth() - birthDate.getMonth();
+
+      // Check if the user is under 18
+      if (age < 18 || (age === 18 && month < 0)) {
+        throw new Error("User must be at least 18 years old.");
+      }
+    },
   },
   skills: [String],
-  photoUrl:{
-    type:String,
-    default:"https://pixabay.com/es/illustrations/icono-usuario-masculino-avatar-5359553/"
+  photoUrl: {
+    type: String,
+    default: "https://pixabay.com/es/illustrations/icono-usuario-masculino-avatar-5359553/"
   },
   timeStamp: {
     type: Date,
@@ -48,10 +59,10 @@ const UserSchema = new mongoose.Schema({
 });
 
 // DB indexing
-UserSchema.index({firstName:1});
+UserSchema.index({ firstName: 1 });
 
 
-UserSchema.methods.getJWTToken = function() {
+UserSchema.methods.getJWTToken = function () {
   const user = this;
   const userData = {
     id: user._id,

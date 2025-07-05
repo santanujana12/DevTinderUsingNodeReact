@@ -6,10 +6,10 @@ import bcrypt from "bcrypt";
 export const authRouter = express.Router();
 
 const Register = async (req, res) => {
-  const { firstName, lastName, emailId, password, age, gender } = req.body;
+  const { firstName, lastName, emailId, password, date_of_birth, gender, photoUrl, skills } = req.body;
 
 
-  if(!validator.isEmail(emailId)){
+  if (!validator.isEmail(emailId)) {
     return res.status(400).send("Invalid Email Type");
   }
 
@@ -27,8 +27,10 @@ const Register = async (req, res) => {
       lastName,
       emailId,
       password: passwordHash,
-      age,
+      age:date_of_birth,
       gender,
+      photoUrl,
+      skills
     });
     await user.save();
     res.status(200).send("User registered successfully");
@@ -53,7 +55,6 @@ const Login = async (req, res) => {
   }
   try {
     const user = await User.findOne({ emailId });
-    console.log(user);
     if (!user) {
       return res.status(400).send("User not found");
     } else {

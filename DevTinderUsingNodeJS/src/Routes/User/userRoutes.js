@@ -2,6 +2,7 @@ import express from "express";
 import User from "../../Models/userModel.js";
 import connectionsInfoModel from "../../Models/connectionsInfoModel.js";
 import mongoose from "mongoose";
+import { calculateAge } from "../../utils/utils.js";
 
 export const UserRouter = express.Router();
 
@@ -24,6 +25,8 @@ const UserFeed = async function (req, res) {
       .populate("fromUserId", "firstName lastName age");
 
     const userSet = new Set();
+    // For new users
+    userSet.add(id);
     isUserConnectionPreExisting.forEach((user) => {
       userSet.add(user.fromUserId._id.toString());
       userSet.add(user.toUserId._id.toString());
@@ -31,9 +34,18 @@ const UserFeed = async function (req, res) {
 
     const findAllUsers = await User.find({
       _id: { $nin: Array.from(userSet) },
-    }).skip((page - 1) * limit).limit(limit).select("firstName lastName age");
+    }).skip((page - 1) * limit).limit(limit).select("firstName lastName gender age photoUrl");
 
-    res.status(200).send(findAllUsers);
+    const editedAllUsersForAge = findAllUsers.map((eachUser) => {
+      const age = calculateAge(eachUser.age);
+      // console.log(age);
+      return {
+        ...eachUser.toObject(),
+        age,
+      };
+    });
+
+    res.status(200).send(editedAllUsersForAge);
   } catch (err) {
     res.status(500).send("Internal server error");
   }

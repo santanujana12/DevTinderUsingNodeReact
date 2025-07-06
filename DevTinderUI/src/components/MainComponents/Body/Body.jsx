@@ -1,11 +1,15 @@
-import { Outlet, useNavigate } from "react-router-dom";
+import { useNavigate, Routes, Route } from "react-router-dom";
 import { NavBar } from "../../SubComponents/NavBar/NavBar";
 import { Footer } from "../../SubComponents/Footer/Footer";
 import { useDispatch, useSelector } from "react-redux";
 import { UserService } from "../../../service/UserService";
 import { addUser, removeUser } from "../../../store/slices/userSlice";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { useCallback, useEffect } from "react";
+import { Login } from "../Auth/Login";
+import { SignUp } from "../Auth/SignUp";
+import { UserFeed } from "../Feed/userFeed";
+import { ProtectedRoutes } from "../Auth/ProtectedRoutes";
 
 export const Body = () => {
   const dispatch = useDispatch();
@@ -35,9 +39,19 @@ export const Body = () => {
   return (
     <>
       <NavBar />
-      <Outlet />
+      <Routes>
+        <Route path="/sign-up" element={<SignUp />} />
+        <Route path="/login" element={<Login />} />
+        <Route
+          path="/feed"
+          element={
+            <ProtectedRoutes user={user} navigate={navigate}>
+              <UserFeed />
+            </ProtectedRoutes>
+          }
+        />
+      </Routes>
       <Footer />
-      <ToastContainer />
     </>
   );
 };

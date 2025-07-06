@@ -2,13 +2,9 @@ import { useState } from "react";
 import { RegistrationService } from "../../../service/AuthService";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { UserService } from "../../../service/UserService";
-import { useDispatch } from "react-redux";
-import { addUser } from "../../../store/slices/userSlice";
 
 export const SignUp = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const [userCreds, setUserCreds] = useState({
     firstName: "",
     lastName: "",

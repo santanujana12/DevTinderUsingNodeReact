@@ -93,7 +93,13 @@ const sendConnectionRequest = async (req, res) => {
           status,
         })
         .then((success) => {
-          return res.status(200).send("Connection request sent successfully");
+          let text = "";
+          if (status === "interested") {
+            text = "Success"
+          } else {
+            text = "Ignored"
+          }
+          return res.status(200).send(text);
         })
         .catch((err) => {
           return res.status(500).send(err.message);
@@ -158,9 +164,9 @@ const updateConnectionRequest = async (req, res) => {
 };
 
 UserRouter.get("/feed", UserFeed);
-UserRouter.put("/connection-request/:status/:toUserId", sendConnectionRequest);
+UserRouter.post("/send-connection-request/:status/:toUserId", sendConnectionRequest);
 UserRouter.get(
-  "/connection-request/active-requests",
+  "/get-connection-request/active-requests",
   getActiveConnectionRequests
 );
 UserRouter.put(

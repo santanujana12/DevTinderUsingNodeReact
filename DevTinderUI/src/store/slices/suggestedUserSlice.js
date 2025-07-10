@@ -7,6 +7,9 @@ const SuggestedUserSlice = createSlice({
     addSuggestedUsers: (state, action) => {
       return action.payload;
     },
+    removeSuggestedUsers: (state, action) => {
+      return [];
+    },
   },
 });
 

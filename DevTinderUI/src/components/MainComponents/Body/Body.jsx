@@ -10,6 +10,7 @@ import { Login } from "../Auth/Login";
 import { SignUp } from "../Auth/SignUp";
 import { UserFeed } from "../Feed/userFeed";
 import { ProtectedRoutes } from "../Auth/ProtectedRoutes";
+import { PublicRoutes } from "../Auth/PublicRoutes";
 
 export const Body = () => {
   const dispatch = useDispatch();
@@ -40,12 +41,26 @@ export const Body = () => {
     <>
       <NavBar />
       <Routes>
-        <Route path="/sign-up" element={<SignUp />} />
-        <Route path="/login" element={<Login />} />
+        <Route
+          path="/sign-up"
+          element={
+            <PublicRoutes user={user}>
+              <SignUp />
+            </PublicRoutes>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <PublicRoutes user={user}>
+              <Login />
+            </PublicRoutes>
+          }
+        />
         <Route
           path="/feed"
           element={
-            <ProtectedRoutes user={user} navigate={navigate}>
+            <ProtectedRoutes user={user}>
               <UserFeed />
             </ProtectedRoutes>
           }

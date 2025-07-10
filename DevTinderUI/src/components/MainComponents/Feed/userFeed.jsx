@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { getSuggestedUsersService } from "../../../service/getUserFeedService";
-import { addSuggestedUsers } from "../../../store/slices/suggestedUserSlice";
 import { removeUser } from "../../../store/slices/userSlice";
 import { useNavigate } from "react-router-dom";
 import { SuggestiveUserCards } from "./suggestiveUserCards";
@@ -10,7 +9,7 @@ import { SuggestiveUserCards } from "./suggestiveUserCards";
 export const UserFeed = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const suggestedUsers = useSelector((state) => state.suggestedUsers);
+  const [suggestedUsers, setSuggestedUsers] = useState([]);
   const [cardCount, setCardCount] = useState(0);
 
   const fetchSuggestedUsers = useCallback(async () => {
@@ -18,7 +17,8 @@ export const UserFeed = () => {
       const response = await getSuggestedUsersService();
       if (response.status === 200) {
         setCardCount(0);
-        dispatch(addSuggestedUsers(response.message));
+        // dispatch(addSuggestedUsers(response.message));
+        setSuggestedUsers(response.message);
       } else if (response.status === 401) {
         toast.error("Session Expired! Please login again");
         dispatch(removeUser());
@@ -33,18 +33,33 @@ export const UserFeed = () => {
     fetchSuggestedUsers();
   }, [fetchSuggestedUsers]);
 
+  if (cardCount >= suggestedUsers.length) {
+    return (
+      <div className="flex justify-center my-20">
+        <div className="card bg-base-100 w-96 shadow-lg border-1">
+          <div className="card-body">
+            <h2 className="card-title justify-center">No Users Available</h2>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div>
-      {console.log(suggestedUsers.length)}
+    <div className="flex flex-wrap justify-center align-center my-20 h-[50%]">
       {suggestedUsers.length > 0 &&
         suggestedUsers.map((eachUserDetails, index) => {
           if (index === cardCount) {
             return (
-              <SuggestiveUserCards
-                key={eachUserDetails.id}
-                eachUserDetails={eachUserDetails}
-                setCardCount={setCardCount}
-              />
+              <div
+                key={eachUserDetails.id + index}
+                className="basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5 border-2 border-gray-200 shadow-sm rounded-lg"
+              >
+                <SuggestiveUserCards
+                  eachUserDetails={eachUserDetails}
+                  setCardCount={setCardCount}
+                />
+              </div>
             );
           }
         })}

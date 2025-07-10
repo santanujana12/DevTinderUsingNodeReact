@@ -1,8 +1,11 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 
-export const PublicRoutes = ({ children, user, navigate }) => {
+export const PublicRoutes = ({ children, user }) => {
+
+    const location = useLocation();
+
     if (user) {
-        return <Navigate to="/feed" state={{ from: navigate.location }} replace />;
+        return <Navigate to="/feed" state={{ from: location.pathname }} replace />;
     }
     return children;
 };

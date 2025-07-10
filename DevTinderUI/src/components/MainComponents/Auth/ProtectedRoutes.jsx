@@ -1,8 +1,10 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 
-export const ProtectedRoutes = ({ children, user, navigate }) => {
+export const ProtectedRoutes = ({ children, user }) => {
+  const location = useLocation();
+ 
   if (!user) {
-    return <Navigate to="/login" state={{ from: navigate.location }} replace />;
+    return <Navigate to="/login" state={{ from: location.pathname }} replace />;
   }
   return children;
 };

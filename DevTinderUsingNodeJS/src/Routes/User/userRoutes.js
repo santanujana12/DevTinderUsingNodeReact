@@ -163,6 +163,21 @@ const updateConnectionRequest = async (req, res) => {
   }
 };
 
+const getActiveConnections = async (req, res) => {
+  const { id } = req.User;
+  try{
+    const findConnections = await connectionsInfoModel.find({
+      toUserId:id
+    }).select("fromUserId", "firstName lastName age");
+    
+    if(findConnections){
+      return res.status(200).send(findConnections);
+    }
+  }catch{
+    res.status(500),send("Internal server error");
+  }
+}
+
 UserRouter.get("/feed", UserFeed);
 UserRouter.post("/send-connection-request/:status/:toUserId", sendConnectionRequest);
 UserRouter.get(
@@ -173,6 +188,7 @@ UserRouter.put(
   "/review-connection-request/:status/:reqId",
   updateConnectionRequest
 );
+UserRouter.get("/get-active-connections",getActiveConnections);
 
 /* 
 

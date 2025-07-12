@@ -1,16 +1,17 @@
 import { useNavigate, Routes, Route } from "react-router-dom";
-import { NavBar } from "../../SubComponents/NavBar/NavBar";
-import { Footer } from "../../SubComponents/Footer/Footer";
 import { useDispatch, useSelector } from "react-redux";
-import { UserService } from "../../../service/UserService";
-import { addUser, removeUser } from "../../../store/slices/userSlice";
 import { toast } from "react-toastify";
 import { useCallback, useEffect } from "react";
+import { addUser, removeUser } from "../../../store/slices/userSlice";
+import { NavBar } from "../../SubComponents/NavBar/NavBar";
+import { Footer } from "../../SubComponents/Footer/Footer";
+import { ProtectedRoutes } from "../Auth/ProtectedRoutes";
+import { PublicRoutes } from "../Auth/PublicRoutes";
+import { UserService } from "../../../service/UserService";
 import { Login } from "../Auth/Login";
 import { SignUp } from "../Auth/SignUp";
 import { UserFeed } from "../Feed/userFeed";
-import { ProtectedRoutes } from "../Auth/ProtectedRoutes";
-import { PublicRoutes } from "../Auth/PublicRoutes";
+import { ConnectionInfo } from "../ConnectionInfo/connectionInfo";
 
 export const Body = () => {
   const dispatch = useDispatch();
@@ -62,6 +63,14 @@ export const Body = () => {
           element={
             <ProtectedRoutes user={user}>
               <UserFeed />
+            </ProtectedRoutes>
+          }
+        />
+        <Route
+          path="/connections"
+          element={
+            <ProtectedRoutes user={user}>
+              <ConnectionInfo />
             </ProtectedRoutes>
           }
         />

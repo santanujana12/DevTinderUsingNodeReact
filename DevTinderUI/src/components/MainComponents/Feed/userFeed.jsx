@@ -38,7 +38,7 @@ export const UserFeed = () => {
       <div className="flex justify-center my-20">
         <div className="card bg-base-100 w-96 shadow-lg border-1">
           <div className="card-body">
-            <h2 className="card-title justify-center">No Users Available</h2>
+            <h2 className="card-title justify-center">Come back soon!</h2>
           </div>
         </div>
       </div>

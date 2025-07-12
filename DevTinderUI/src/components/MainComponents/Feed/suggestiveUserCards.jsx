@@ -1,4 +1,3 @@
-import { useSelector } from "react-redux";
 import { sendConnectionRequestService } from "../../../service/sendConnectionRequestService";
 import { toast } from "react-toastify";
 

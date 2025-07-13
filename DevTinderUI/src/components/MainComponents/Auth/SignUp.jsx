@@ -28,8 +28,8 @@ export const SignUp = () => {
   };
 
   return (
-    <div className="flex justify-center my-10">
-      <div className="card bg-base-100 w-96 shadow-lg border-1">
+    <div className="flex justify-center py-20 min-h-screen">
+      <div className="card bg-base-100 w-96 shadow-lg border-1 max-h-[calc(100vh-10rem)] overflow-y-auto">
         <div className="card-body">
           <h2 className="card-title justify-center">Sign Up</h2>
           <label className="form-control w-full max-w-xs my-2">

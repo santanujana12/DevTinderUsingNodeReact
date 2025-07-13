@@ -1,11 +1,12 @@
 import { Navigate, useLocation } from "react-router-dom";
+import { useAuth } from "../../../hooks/useAuth";
 
-export const PublicRoutes = ({ children, user }) => {
-
+export const PublicRoutes = ({ children }) => {
+    const { isAuthenticated } = useAuth();
     const location = useLocation();
 
-    if (user) {
-        return <Navigate to="/feed" state={{ from: location.pathname }} replace />;
+    if (isAuthenticated) {
+        return <Navigate to="/dashboard/feed" state={{ from: location.pathname }} replace />;
     }
     return children;
 };

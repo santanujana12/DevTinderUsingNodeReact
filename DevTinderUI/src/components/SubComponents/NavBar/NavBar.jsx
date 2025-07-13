@@ -15,7 +15,7 @@ export const NavBar = () => {
       if (response === true) {
         toast.success("Logged Out Successfully");
         dispatch(removeUser());
-        navigate("/login");
+        navigate("/");
       }
     } catch {
       toast.error("Something went wrong");
@@ -25,7 +25,7 @@ export const NavBar = () => {
   return (
     <div className="navbar bg-base-300 shadow-sm fixed top-0">
       <div className="flex-1">
-        <Link className="btn btn-ghost text-xl" to={user?"/feed":"/login"}>Tinder 💘 Clone</Link>
+        <Link className="btn btn-ghost text-xl" to={user?"/dashboard/feed":"/"}>Tinder 💘 Clone</Link>
       </div>
       {user && (
         <div className="flex gap-2 mx-4">
@@ -38,7 +38,7 @@ export const NavBar = () => {
             </button>
             <ul className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
               <li>
-                <Link to="/connections">My Connections</Link>
+                <Link to="/dashboard/connection-info">My Connections</Link>
               </li>
               <li>
                 <Link className="justify-between">Profile</Link>

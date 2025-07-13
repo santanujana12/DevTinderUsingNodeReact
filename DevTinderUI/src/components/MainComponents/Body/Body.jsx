@@ -10,8 +10,10 @@ import { PublicRoutes } from "../Auth/PublicRoutes";
 import { UserService } from "../../../service/UserService";
 import { Login } from "../Auth/Login";
 import { SignUp } from "../Auth/SignUp";
+import { Welcome } from "../Auth/Welcome";
 import { UserFeed } from "../Feed/userFeed";
 import { ConnectionInfo } from "../ConnectionInfo/connectionInfo";
+import { Dashboard } from "../Dashboard/Dashboard";
 
 export const Body = () => {
   const dispatch = useDispatch();
@@ -43,9 +45,17 @@ export const Body = () => {
       <NavBar />
       <Routes>
         <Route
+          path="/"
+          element={
+            <PublicRoutes>
+              <Welcome />
+            </PublicRoutes>
+          }
+        />
+        <Route
           path="/sign-up"
           element={
-            <PublicRoutes user={user}>
+            <PublicRoutes>
               <SignUp />
             </PublicRoutes>
           }
@@ -53,27 +63,23 @@ export const Body = () => {
         <Route
           path="/login"
           element={
-            <PublicRoutes user={user}>
+            <PublicRoutes>
               <Login />
             </PublicRoutes>
           }
         />
         <Route
-          path="/feed"
+          path="/dashboard"
           element={
-            <ProtectedRoutes user={user}>
-              <UserFeed />
+            <ProtectedRoutes>
+              <Dashboard />
             </ProtectedRoutes>
           }
-        />
-        <Route
-          path="/connections"
-          element={
-            <ProtectedRoutes user={user}>
-              <ConnectionInfo />
-            </ProtectedRoutes>
-          }
-        />
+        >
+          <Route index element={<UserFeed />} />
+          <Route path="feed" element={<UserFeed />} />
+          <Route path="connection-info" element={<ConnectionInfo />} />
+        </Route>
       </Routes>
       <Footer />
     </>

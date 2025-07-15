@@ -23,7 +23,7 @@ export const NavBar = () => {
   };
 
   return (
-    <div className="navbar bg-base-300 shadow-sm fixed top-0">
+    <div className="navbar bg-base-300 shadow-sm fixed top-0 z-50 w-full">
       <div className="flex-1">
         <Link className="btn btn-ghost text-xl" to={user?"/dashboard/feed":"/"}>Tinder 💘 Clone</Link>
       </div>

@@ -46,7 +46,7 @@ export const UserFeed = () => {
   }
 
   return (
-    <div className="flex flex-wrap justify-center align-center my-20 h-[50%]">
+    <div className="flex flex-wrap justify-center align-center h-[50%]">
       {suggestedUsers.length > 0 &&
         suggestedUsers.map((eachUserDetails, index) => {
           if (index === cardCount) {

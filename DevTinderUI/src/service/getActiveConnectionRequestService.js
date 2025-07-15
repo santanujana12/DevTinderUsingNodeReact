@@ -1,9 +1,9 @@
 import axios from "axios";
 import { IP_ADDRESS } from "../utils/constants";
 
-export const getConnectionRequestService = async () => {
+export const getActiveConnectionRequestService = async () => {
   const response = await axios.get(
-    IP_ADDRESS + `/user/send-connection-request/active-requests`,
+    IP_ADDRESS + `/user/get-connection-request/active-requests`,
     {
       withCredentials: true,
     }

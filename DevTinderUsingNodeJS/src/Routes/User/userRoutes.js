@@ -119,9 +119,27 @@ const getActiveConnectionRequests = async (req, res) => {
         toUserId: id,
         status: "interested",
       })
-      .populate("fromUserId", "firstName lastName age");
+      .populate("fromUserId", "firstName lastName age photoUrl bio").lean();
 
-    return res.status(200).send(activeRequests);
+    // only need fromUserIds
+    const filterData = activeRequests.map((eachRequest) => ({
+      id: eachRequest._id,
+      firstName:eachRequest.fromUserId.firstName,
+      lastName:eachRequest.fromUserId.lastName,
+      age:eachRequest.fromUserId.age,
+      photoUrl:eachRequest.fromUserId.photoUrl,
+      bio:eachRequest.fromUserId.bio
+    }));
+
+    const displayActualData = filterData.map((eachData) => {
+      const age = calculateAge(eachData.age);
+      return {
+        ...eachData,
+        age
+      }
+    })
+
+    return res.status(200).send(displayActualData);
   } catch (err) {
     res.status(500).send("Internal server error");
   }
@@ -165,16 +183,16 @@ const updateConnectionRequest = async (req, res) => {
 
 const getActiveConnections = async (req, res) => {
   const { id } = req.User;
-  try{
+  try {
     const findConnections = await connectionsInfoModel.find({
-      toUserId:id
-    }).select("fromUserId", "firstName lastName age");
-    
-    if(findConnections){
+      toUserId: id
+    }).select("fromUserId", "firstName lastName age photoUrl");
+
+    if (findConnections) {
       return res.status(200).send(findConnections);
     }
-  }catch{
-    res.status(500),send("Internal server error");
+  } catch {
+    res.status(500), send("Internal server error");
   }
 }
 
@@ -184,11 +202,11 @@ UserRouter.get(
   "/get-connection-request/active-requests",
   getActiveConnectionRequests
 );
-UserRouter.put(
+UserRouter.post(
   "/review-connection-request/:status/:reqId",
   updateConnectionRequest
 );
-UserRouter.get("/get-active-connections",getActiveConnections);
+UserRouter.get("/get-active-connections", getActiveConnections);
 
 /* 
 

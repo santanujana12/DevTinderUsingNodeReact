@@ -124,11 +124,11 @@ const getActiveConnectionRequests = async (req, res) => {
     // only need fromUserIds
     const filterData = activeRequests.map((eachRequest) => ({
       id: eachRequest._id,
-      firstName:eachRequest.fromUserId.firstName,
-      lastName:eachRequest.fromUserId.lastName,
-      age:eachRequest.fromUserId.age,
-      photoUrl:eachRequest.fromUserId.photoUrl,
-      bio:eachRequest.fromUserId.bio
+      firstName: eachRequest.fromUserId.firstName,
+      lastName: eachRequest.fromUserId.lastName,
+      age: eachRequest.fromUserId.age,
+      photoUrl: eachRequest.fromUserId.photoUrl,
+      bio: eachRequest.fromUserId.bio
     }));
 
     const displayActualData = filterData.map((eachData) => {
@@ -184,15 +184,40 @@ const updateConnectionRequest = async (req, res) => {
 const getActiveConnections = async (req, res) => {
   const { id } = req.User;
   try {
-    const findConnections = await connectionsInfoModel.find({
-      toUserId: id
-    }).select("fromUserId", "firstName lastName age photoUrl");
+    const activeConnections = await connectionsInfoModel.find({
+      $or: [
+        { fromUserId: id },
+        { toUserId: id }
+      ],
+      status: "accepted"
+    })
+      .populate("fromUserId", "firstName lastName age photoUrl bio")
+      .populate("toUserId", "firstName lastName age photoUrl bio")
+      .lean();
 
-    if (findConnections) {
-      return res.status(200).send(findConnections);
+    if (activeConnections && activeConnections.length > 0) {
+      const filterData = activeConnections.map((eachData) => {
+        const isSender = eachData.fromUserId._id.toString() === id;
+        const data = isSender ? eachData.toUserId : eachData.fromUserId
+        const userAge = calculateAge(data.age);
+
+        return {
+          id: eachData._id,
+          firstName: data.firstName,
+          lastName: data.lastName,
+          age: userAge,
+          photoUrl: data.photoUrl,
+          bio: data.bio
+        }
+      })
+      return res.status(200).send(filterData);
     }
-  } catch {
-    res.status(500), send("Internal server error");
+    else {
+      return res.status(404).send("No active connections exist");
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal server error");
   }
 }
 

@@ -12,10 +12,10 @@ import { Login } from "../Auth/Login";
 import { SignUp } from "../Auth/SignUp";
 import { Welcome } from "../Auth/Welcome";
 import { UserFeed } from "../Feed/userFeed";
-import { ConnectionInfo } from "../ConnectionInfo/connectionInfo";
 import { Dashboard } from "../Dashboard/Dashboard";
 import { SideNavPanel } from "../../SubComponents/SideNavPanel/SideNavPanel";
 import { Requests } from "../../Requests/Requests";
+import { UserConnections } from "../UserConnections/UserConnections";
 
 export const Body = () => {
   const dispatch = useDispatch();
@@ -82,7 +82,7 @@ export const Body = () => {
           <Route index element={<UserFeed />} />
           <Route path="feed" element={<UserFeed />} />
           <Route path="requests" element={<Requests />} />
-          <Route path="connections" element={<ConnectionInfo />} />
+          <Route path="connections" element={<UserConnections />} />
         </Route>
       </Routes>
       <Footer />

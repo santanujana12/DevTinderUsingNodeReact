@@ -9,7 +9,6 @@ export const Requests = () => {
   const fetchActiveRequests = async () => {
     try {
       const response = await getActiveConnectionRequestService();
-      console.log("fetchActiveRequests response:", response);
       setActiveRequests(response.message);
     } catch (error) {
       console.error("Error fetching active requests:", error);
@@ -24,7 +23,6 @@ export const Requests = () => {
   const handleReviewRequest = async (status, requestId) => {
     try {
       const response = await reviewRequestService(status, requestId);
-      console.log("handleReviewRequest response:", response);
       if (response.status === 200) {
         // const filteredRequests = activeRequests.filter((eachRequest) => {
         //   return eachRequest._id !== requestId;

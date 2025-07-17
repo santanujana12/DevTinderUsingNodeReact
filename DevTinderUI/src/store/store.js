@@ -1,10 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
 import UserSlice from "./slices/userSlice";
-import suggestedUserSlice from "./slices/suggestedUserSlice";
+import userConnectionSlice from "./slices/userConnectionSlice";
 
 export const Store = configureStore({
     reducer:{
         user:UserSlice,
-        suggestedUsers:suggestedUserSlice
+        userConnections:userConnectionSlice
     }
 })

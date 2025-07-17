@@ -1,7 +1,14 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 
 export const SideNavPanel = () => {
+  const location = useLocation();
+  const [isActive, setIsActive] = useState("");
+
+  useEffect(() => {
+    setIsActive(location.pathname);
+  }, [location.pathname]);
+
   return (
     <div className="fixed left-0 top-16 h-[calc(100vh-4rem)] w-64 bg-gray-800 text-white z-40">
       <div className="p-4">
@@ -9,7 +16,11 @@ export const SideNavPanel = () => {
       </div>
       <div>
         <ul className="p-4">
-          <li className="py-2 hover:bg-gray-700 cursor-pointer">
+          <li
+            className={`${
+              isActive === "/dashboard/feed" && "bg-gray-700"
+            } py-2 hover:bg-gray-700 cursor-pointer`}
+          >
             <Link
               to="/dashboard/feed"
               className="w-full text-left flex items-center pl-4"
@@ -25,7 +36,11 @@ export const SideNavPanel = () => {
               Feed
             </Link>
           </li>
-          <li className="py-2 hover:bg-gray-700 cursor-pointer">
+          <li
+            className={`${
+              isActive === "/dashboard/requests" && "bg-gray-700"
+            } py-2 hover:bg-gray-700 cursor-pointer`}
+          >
             <Link
               to="/dashboard/requests"
               className="w-full text-left flex items-center pl-4"
@@ -42,7 +57,11 @@ export const SideNavPanel = () => {
               Manage Requests
             </Link>
           </li>
-          <li className="py-2 hover:bg-gray-700 cursor-pointer">
+          <li
+            className={`${
+              isActive === "/dashboard/connections" && "bg-gray-700"
+            } py-2 hover:bg-gray-700 cursor-pointer`}
+          >
             <Link
               to="/dashboard/connections"
               className="w-full text-left flex items-center pl-4"

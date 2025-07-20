@@ -27,7 +27,7 @@ const Register = async (req, res) => {
       lastName,
       emailId,
       password: passwordHash,
-      age:date_of_birth,
+      age: date_of_birth,
       gender,
       photoUrl,
       skills
@@ -79,6 +79,31 @@ const logout = async (req, res) => {
     .status(200);
 };
 
+// Reset password for a particular user
+const resetPassword = async (req, res) => {
+  const { emailId, oldPassword, newPassword } = req.body;
+  if(!validator.isEmail(emailId)){
+    return res.status(400).send("Invalid email");
+  }
+  console.log(newPassword);
+  // const passwordHash = await bcrypt.hash(newPassword, 10);
+  try {
+    const user_from_db = await User.findOne({ emailId });
+    console.log(user_from_db);
+    // if (!user_from_db) {
+    //   return res.status(404).send("User not found");
+    // }
+    // user_from_db.password = passwordHash;
+    // await user_from_db.save();
+
+    res.status(200).send("Password reset successfully");
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Error resetting password");
+  }
+};
+
 authRouter.post("/register", Register);
 authRouter.post("/login", Login);
 authRouter.get("/logout", logout);
+authRouter.post("/reset-password", resetPassword);

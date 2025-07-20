@@ -59,17 +59,25 @@ export const Login = () => {
             />
           </label>
         </div>
-        <div className="card-actions justify-end m-4">
-          <button className="btn btn-info" onClick={() => navigate("/sign-up")}>
-            Sign Up
-          </button>
-          <button
-            className="btn btn-primary"
-            onClick={() => handleLogin(userCreds)}
-          >
-            Login
-          </button>
+        <div className="card-actions m-4">
+          <div>
+            <button className="btn btn-info" onClick={() => navigate("/sign-up")}>
+              Forgot Password?
+            </button>
+          </div>
+          <div className="card-actions justify-end">
+            <button className="btn btn-info" onClick={() => navigate("/sign-up")}>
+              Sign Up
+            </button>
+            <button
+              className="btn btn-primary"
+              onClick={() => handleLogin(userCreds)}
+            >
+              Login
+            </button>
+          </div>
         </div>
+
       </div>
     </div>
   );

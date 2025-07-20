@@ -4,7 +4,7 @@ import { IP_ADDRESS } from "../utils/constants";
 export const reviewRequestService = async (status, cardId) => {
   try {
     const response = await axios.post(
-      IP_ADDRESS + `/user/review-connection-request/${status}/${cardId}`,
+      IP_ADDRESS + `/profile/review-connection-request/${status}/${cardId}`,
       {},
       {
         withCredentials: true,

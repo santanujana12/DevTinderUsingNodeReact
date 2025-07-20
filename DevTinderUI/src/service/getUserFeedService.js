@@ -2,7 +2,7 @@ import axios from "axios";
 import { IP_ADDRESS } from "../utils/constants";
 
 export const getSuggestedUsersService = async () => {
-  const response = await axios.get(IP_ADDRESS + "/user/feed", {
+  const response = await axios.get(IP_ADDRESS + "/profile/feed", {
     withCredentials: true,
   });
   return {

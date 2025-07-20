@@ -54,7 +54,7 @@ export const UserConnections = () => {
             {userConnections.map((eachConnection) => {
               return (
                 <UserConnectionCards
-                  key={eachConnection._id}
+                  key={eachConnection.id}
                   eachConnection={eachConnection}
                   isActive={activeUserCard === eachConnection.id}
                   setActiveUserCard={setActiveUserCard}

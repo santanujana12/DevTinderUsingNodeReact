@@ -3,7 +3,7 @@ import { IP_ADDRESS } from "../utils/constants";
 
 export const getActiveConnectionRequestService = async () => {
   const response = await axios.get(
-    IP_ADDRESS + `/user/get-connection-request/active-requests`,
+    IP_ADDRESS + `/profile/get-connection-request/active-requests`,
     {
       withCredentials: true,
     }

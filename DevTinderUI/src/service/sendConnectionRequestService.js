@@ -3,7 +3,7 @@ import { IP_ADDRESS } from "../utils/constants";
 
 export const sendConnectionRequestService = async (status,cardId) => {
   const response = await axios.post(
-    IP_ADDRESS + `/user/send-connection-request/${status}/${cardId}`,{},
+    IP_ADDRESS + `/profile/send-connection-request/${status}/${cardId}`,{},
     {
       withCredentials: true,
     }

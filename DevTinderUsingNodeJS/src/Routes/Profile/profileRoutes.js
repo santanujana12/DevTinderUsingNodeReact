@@ -204,6 +204,7 @@ const getActiveConnections = async (req, res) => {
           id: eachData._id,
           firstName: data.firstName,
           lastName: data.lastName,
+          userId:data._id,
           age: userAge,
           photoUrl: data.photoUrl,
           bio: data.bio

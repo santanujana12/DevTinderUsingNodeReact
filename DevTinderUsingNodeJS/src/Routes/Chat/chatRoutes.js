@@ -9,7 +9,7 @@ const chatRouter = express.Router();
 chatRouter.get("/history", async (req, res) => {
   try {
     const { userId1, userId2, page = 1, limit = 50 } = req.query;
-    const currentUserId = req.user.id;
+    const currentUserId = req.User.id;
 
     // Verify that the current user is one of the participants
     if (currentUserId !== userId1 && currentUserId !== userId2) {
@@ -26,6 +26,7 @@ chatRouter.get("/history", async (req, res) => {
       ]
     });
 
+    console.log(userId1+" "+userId2);
     if (!connection) {
       return res.status(403).json({ 
         error: "Chat is only available between connected users" 
@@ -50,7 +51,7 @@ chatRouter.get("/history", async (req, res) => {
 // Get unread message count for current user
 chatRouter.get("/unread-count", async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.User.id;
     const unreadCount = await ChatMessage.getUnreadCount(userId);
     
     res.json({ unreadCount });
@@ -64,7 +65,7 @@ chatRouter.get("/unread-count", async (req, res) => {
 // Get unread count by conversation
 chatRouter.get("/unread-count-by-user", async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.User.id;
     
     const unreadMessages = await ChatMessage.aggregate([
       {
@@ -163,7 +164,7 @@ chatRouter.post("/online-users", async (req, res) => {
 chatRouter.post("/mark-as-read", async (req, res) => {
   try {
     const { senderId } = req.body;
-    const receiverId = req.user.id;
+    const receiverId = req.User.id;
 
     await ChatMessage.markAsRead(senderId, receiverId);
     
@@ -179,7 +180,7 @@ chatRouter.post("/mark-as-read", async (req, res) => {
 chatRouter.delete("/message/:messageId", async (req, res) => {
   try {
     const { messageId } = req.params;
-    const userId = req.user.id;
+    const userId = req.User.id;
 
     const message = await ChatMessage.findById(messageId);
     
@@ -206,7 +207,7 @@ chatRouter.delete("/message/:messageId", async (req, res) => {
 // Get conversation list for current user
 chatRouter.get("/conversations", async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.User.id;
 
     const conversations = await ChatMessage.aggregate([
       {

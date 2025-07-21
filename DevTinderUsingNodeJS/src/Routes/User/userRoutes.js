@@ -25,7 +25,16 @@ const viewUserProfile = async (req, res) => {
   try {
     const user_from_db = await User.findById(id).select("firstName lastName gender emailId skills photoUrl");
     if (user_from_db) {
-      res.send(user_from_db).status(200);
+      const changeIdPattern = {
+        id:user_from_db._id,
+        firstName:user_from_db.firstName,
+        lastName:user_from_db.lastName,
+        gender:user_from_db.gender,
+        emailId:user_from_db.emailId,
+        skills:user_from_db.skills,
+        photoUrl:user_from_db.photoUrl
+      }
+      res.send(changeIdPattern).status(200);
     } else {
       res.send("No user found").status(404);
     }
@@ -33,8 +42,6 @@ const viewUserProfile = async (req, res) => {
     res.send("Error fetching data").status(500);
   }
 };
-
-
 
 // Update user details
 const updateUserDetails = async (req, res) => {

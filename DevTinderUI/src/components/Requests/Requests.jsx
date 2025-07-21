@@ -25,7 +25,7 @@ export const Requests = () => {
       const response = await reviewRequestService(status, requestId);
       if (response.status === 200) {
         // const filteredRequests = activeRequests.filter((eachRequest) => {
-        //   return eachRequest._id !== requestId;
+        //   return eachRequest.id !== requestId;
         // });
         // setActiveRequests(filteredRequests);
         toast.success(response.message);

@@ -17,12 +17,12 @@ export const UserConnectionCards = ({
   // Check online status
   useEffect(() => {
     if (chatService.isConnected) {
-      setIsOnline(chatService.isUserOnline(eachConnection._id));
+      setIsOnline(chatService.isUserOnline(eachConnection.id));
     }
 
     // Listen for online status updates
     const unsubscribe = chatService.onUserStatusUpdate((data) => {
-      if (data.userId === eachConnection._id) {
+      if (data.userId === eachConnection.id) {
         setIsOnline(data.isOnline);
         if (!data.isOnline && data.lastSeen) {
           setLastSeen(data.lastSeen);
@@ -31,7 +31,7 @@ export const UserConnectionCards = ({
     });
 
     return unsubscribe;
-  }, [eachConnection._id]);
+  }, [eachConnection.id]);
 
   const formatLastSeen = (lastSeenDate) => {
     if (!lastSeenDate) return "Offline";

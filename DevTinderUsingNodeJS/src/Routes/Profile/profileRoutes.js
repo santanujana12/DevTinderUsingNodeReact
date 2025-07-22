@@ -34,15 +34,22 @@ const UserFeed = async function (req, res) {
 
     const findAllUsers = await User.find({
       _id: { $nin: Array.from(userSet) },
-    }).skip((page - 1) * limit).limit(limit).select("firstName lastName gender age photoUrl");
+    }).skip((page - 1) * limit).limit(limit).select("firstName lastName gender age photoUrl bio");
 
     const editedAllUsersForAge = findAllUsers.map((eachUser) => {
       const age = calculateAge(eachUser.age);
       return {
-        ...eachUser.toObject(),
+        id:eachUser._id,
+        firstName:eachUser.firstName,
+        lastName:eachUser.lastName,
+        gender:eachUser.gender,
+        photoUrl:eachUser.photoUrl,
+        bio:eachUser.bio,
         age,
       };
     });
+
+    
 
     res.status(200).send(editedAllUsersForAge);
   } catch (err) {

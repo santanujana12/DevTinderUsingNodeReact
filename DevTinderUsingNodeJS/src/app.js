@@ -122,12 +122,30 @@ io.on("connection", async (socket) => {
       const populatedMessage = await ChatMessage.findById(savedMessage._id)
         .populate('senderId', 'firstName lastName photoUrl')
         .populate('receiverId', 'firstName lastName photoUrl');
+      
+      // Transform _id to id for frontend consistency
+      const messageToSend = {
+        ...populatedMessage.toObject(),
+        id: populatedMessage._id,
+        senderId: {
+          id: populatedMessage.senderId._id,
+          firstName: populatedMessage.senderId.firstName,
+          lastName: populatedMessage.senderId.lastName,
+          photoUrl: populatedMessage.senderId.photoUrl
+        },
+        receiverId: {
+          id: populatedMessage.receiverId._id,
+          firstName: populatedMessage.receiverId.firstName,
+          lastName: populatedMessage.receiverId.lastName,
+          photoUrl: populatedMessage.receiverId.photoUrl
+        }
+      };
 
       // Create room ID for this conversation
       const roomId = [socket.userId, receiverId].sort().join('-');
       
       // Send message to the room (both sender and receiver)
-      io.to(roomId).emit("receive_message", populatedMessage);
+      io.to(roomId).emit("receive_message", messageToSend);
       
       // If receiver is online, mark as delivered
       const receiverSocketId = userSockets.get(receiverId);

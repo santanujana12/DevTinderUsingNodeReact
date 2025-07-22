@@ -45,7 +45,7 @@ ChatMessageSchema.index({ timestamp: -1 });
 ChatMessageSchema.statics.getConversation = async function(userId1, userId2, page = 1, limit = 50) {
   const skip = (page - 1) * limit;
   
-  return this.find({
+  const messages = await this.find({
     $and: [
       {
         $or: [
@@ -61,6 +61,24 @@ ChatMessageSchema.statics.getConversation = async function(userId1, userId2, pag
   .sort({ timestamp: -1 })
   .skip(skip)
   .limit(limit);
+  
+  // Transform _id to id for frontend consistency
+  return messages.map(message => ({
+    ...message.toObject(),
+    id: message._id,
+    senderId: {
+      id: message.senderId._id,
+      firstName: message.senderId.firstName,
+      lastName: message.senderId.lastName,
+      photoUrl: message.senderId.photoUrl
+    },
+    receiverId: {
+      id: message.receiverId._id,
+      firstName: message.receiverId.firstName,
+      lastName: message.receiverId.lastName,
+      photoUrl: message.receiverId.photoUrl
+    }
+  }));
 };
 
 // Method to mark messages as read

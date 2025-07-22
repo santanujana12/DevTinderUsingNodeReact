@@ -167,10 +167,21 @@ export const UserMessageCard = ({ eachConnection, setActiveUserCard }) => {
           </div>
         ) : (
           messages.map((message, index) => {
-            const isOwn = message.senderId.id === currentUser.id;
+            // Handle message ownership
+            const senderId = message.senderId?.id || message.senderId;
+            const isOwn = senderId === currentUser.id;
+            
+            console.log("Rendering message:", {
+              messageId: message.id || message._id,
+              senderId,
+              senderIdObject: message.senderId,
+              currentUserId: currentUser.id,
+              isOwn,
+              message: message.message
+            });
             return (
               <MessageBubble
-                key={message.id || index}
+                key={message.id || message._id || index}
                 message={message}
                 isOwn={isOwn}
               />

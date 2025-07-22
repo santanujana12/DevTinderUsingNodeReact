@@ -19,13 +19,13 @@ export const useChat = (currentUserId, selectedUserId) => {
   // Load chat history
   const loadChatHistory = useCallback(async () => {
     if (!currentUserId || !selectedUserId) return;
-
+    let timeOut;
     setIsLoading(true);
     try {
       const response = await getChatHistory(currentUserId, selectedUserId);
       if (response.data) {
         setMessages(response.data.messages); // Reverse to show oldest first
-        setTimeout(scrollToBottom, 100);
+        timeOut = setTimeout(scrollToBottom, 100);
       }
     } catch (error) {
       console.error("Error loading chat history:", error);
@@ -33,34 +33,33 @@ export const useChat = (currentUserId, selectedUserId) => {
     } finally {
       setIsLoading(false);
     }
+
+    return () => clearTimeout(timeOut);
   }, [currentUserId, selectedUserId]);
 
   // Send message
   const sendMessage = useCallback(
     (message, messageType = "text") => {
+      console.log("sendMessage called:", { selectedUserId, message, isConnected: chatService.isConnected });
+      
       if (!selectedUserId || !message.trim() || !chatService.isConnected) {
+        console.log("Send message blocked:", {
+          hasSelectedUser: !!selectedUserId,
+          hasMessage: !!message.trim(),
+          isConnected: chatService.isConnected
+        });
         return;
       }
 
       try {
+        console.log("Attempting to send message via socket...");
         const messageData = chatService.sendMessage(
           selectedUserId,
           message.trim(),
           messageType
         );
 
-        // Add message to local state immediately for better UX
-        const newMessage = {
-          id: Date.now().toString(), // Temporary ID
-          senderId: { id: currentUserId },
-          receiverId: { id: selectedUserId },
-          message: message.trim(),
-          messageType,
-          status: "sent",
-          timestamp: new Date(),
-        };
-
-        setMessages((prev) => [...prev, newMessage]);
+        console.log("Message sent to socket, waiting for server confirmation");
         setTimeout(scrollToBottom, 100);
 
         return messageData;
@@ -103,38 +102,81 @@ export const useChat = (currentUserId, selectedUserId) => {
   useEffect(() => {
     if (!currentUserId) return;
 
-    const token = document.cookie.split("; ")
+    console.log("Initializing chat for user:", currentUserId);
+    console.log("All cookies:", document.cookie);
+    
+    // Try different token cookie names
+    const tokenFromCookie = document.cookie
+      .split("; ")
       .find((row) => row.startsWith("token="))
       ?.split("=")[1];
+    
+    // Also try "authToken" or other common names
+    const authTokenFromCookie = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("authToken="))
+      ?.split("=")[1];
+      
+    const token = tokenFromCookie || authTokenFromCookie;
+    
+    console.log("Token found:", !!token, token ? "(token exists)" : "(no token)");
 
     if (token) {
       chatService.connect(token, currentUserId);
-      setIsConnected(chatService.isConnected);
+      
+      // Update connection status periodically
+      const checkConnection = setInterval(() => {
+        setIsConnected(chatService.isConnected);
+      }, 1000);
+      
+      return () => {
+        clearInterval(checkConnection);
+        chatService.disconnect();
+        setIsConnected(false);
+      };
+    } else {
+      console.error("No authentication token found in cookies");
     }
-
-    return () => {
-      chatService.disconnect();
-      setIsConnected(false);
-    };
   }, [currentUserId]);
 
   // Set up message listeners
   useEffect(() => {
+    console.log("Setting up message listeners for:", { currentUserId, selectedUserId });
+    
     const unsubscribeMessage = chatService.onMessage((message) => {
+      console.log("🔥 RECEIVED NEW MESSAGE VIA SOCKET:", message);
+      
       setMessages((prev) => {
+        // Normalize message structure for consistency
+        const normalizedMessage = {
+          ...message,
+          senderId: message.senderId?.id ? message.senderId : { id: message.senderId },
+          receiverId: message.receiverId?.id ? message.receiverId : { id: message.receiverId },
+          id: message._id || message.id || Date.now().toString()
+        };
+        
+        console.log("Normalized message:", normalizedMessage);
+        
         // Avoid duplicates
         const exists = prev.some(
-          (msg) =>
-            msg.id === message.id ||
-            (msg.senderId.id === message.senderId &&
-              msg.timestamp === message.timestamp &&
-              msg.message === message.message)
+          (msg) => {
+            const msgSenderId = msg.senderId?.id || msg.senderId;
+            const newMsgSenderId = normalizedMessage.senderId?.id || normalizedMessage.senderId;
+            
+            return msg.id === normalizedMessage.id ||
+                   msg._id === normalizedMessage._id ||
+                   (msgSenderId === newMsgSenderId &&
+                    Math.abs(new Date(msg.timestamp) - new Date(normalizedMessage.timestamp)) < 1000 &&
+                    msg.message === normalizedMessage.message);
+          }
         );
 
         if (!exists) {
+          console.log("Adding new message to chat");
           setTimeout(scrollToBottom, 100);
-          return [...prev, message];
+          return [...prev, normalizedMessage];
         }
+        console.log("Message already exists, skipping");
         return prev;
       });
 
@@ -188,7 +230,9 @@ export const useChat = (currentUserId, selectedUserId) => {
 
   // Load chat history when selected user changes
   useEffect(() => {
+    console.log("🔄 Selected user changed:", { selectedUserId, currentUserId });
     if (selectedUserId) {
+      console.log("📚 Loading chat history and joining room...");
       loadChatHistory();
       chatService.joinRoom(currentUserId, selectedUserId);
 
@@ -196,6 +240,7 @@ export const useChat = (currentUserId, selectedUserId) => {
       setTimeout(markAsRead, 1000);
 
       return () => {
+        console.log("🚪 Leaving room for:", { currentUserId, selectedUserId });
         chatService.leaveRoom(currentUserId, selectedUserId);
       };
     }

@@ -10,7 +10,7 @@ export const SideNavPanel = () => {
   }, [location.pathname]);
 
   return (
-    <div className="fixed left-0 top-16 h-[calc(100vh-4rem)] w-64 bg-gray-800 text-white z-40">
+    <div className="fixed left-0 top-16 h-[calc(100vh-4rem)] w-64 bg-gray-800 text-white z-40 mb-16">
       <div className="p-4">
         <h1 className="text-2xl font-bold text-gray-200">Side Nav Panel</h1>
       </div>
